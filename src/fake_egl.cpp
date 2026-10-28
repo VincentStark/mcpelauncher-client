@@ -1,5 +1,6 @@
 #include "fake_egl.h"
 #include "gl_core_patch.h"
+#include "apple_arm64_abi.h"
 #include "settings.h"
 #include "imgui_ui.h"
 #include <map>
@@ -296,4 +297,6 @@ void FakeEGL::setupGLOverrides() {
         };
     }
     GLCorePatch::installGL(fake_egl::hostProcOverrides, fake_egl::eglGetProcAddress);
+    // Must stay the outermost layer: the game calls these with the Android stack layout
+    AppleArm64Abi::installGL(fake_egl::hostProcOverrides, fake_egl::eglGetProcAddress);
 }
